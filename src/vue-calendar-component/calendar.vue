@@ -1,8 +1,9 @@
-<style>
+<style scoped>
 @media screen and (min-width: 460px) {
   .wh_item_date:hover {
-    background: #71c7a5;
+    /* background: #71c7a5; */
     cursor: pointer;
+    color: #409eff
   }
 }
 * {
@@ -25,7 +26,7 @@ li {
 .wh_top_changge li {
   cursor: pointer;
   display: flex;
-  color: #fff;
+  color: #303133;
   font-size: 18px;
   flex: 1;
   justify-content: center;
@@ -40,7 +41,7 @@ li {
 .wh_content_all {
   font-family: -apple-system, BlinkMacSystemFont, "PingFang SC",
     "Helvetica Neue", STHeiti, "Microsoft Yahei", Tahoma, Simsun, sans-serif;
-  background-color: #0fc37c;
+  /* background-color: #0fc37c; */
   width: 100%;
   overflow: hidden;
   padding-bottom: 8px;
@@ -49,7 +50,8 @@ li {
 .wh_content {
   display: flex;
   flex-wrap: wrap;
-  padding: 0 3% 0 3%;
+  /* padding: 0 1% 0 1%; */
+  justify-content:space-around;
   width: 100%;
 }
 
@@ -64,17 +66,17 @@ wh_content_item_tag {
   font-size: 15px;
   width: 13.4%;
   text-align: center;
-  color: #fff;
+  color: #303133;
   position: relative;
 }
 .wh_content_item {
-  height: 40px;
+  height: 50px;
 }
 
 .wh_top_tag {
-  width: 40px;
-  height: 40px;
-  line-height: 40px;
+  width: 30px;
+  height: 30px;
+  line-height: 30px;
   margin: auto;
   display: flex;
   justify-content: center;
@@ -82,39 +84,56 @@ wh_content_item_tag {
 }
 
 .wh_item_date {
-  width: 40px;
-  height: 40px;
-  line-height: 40px;
+  width: 30px;
+  height: 30px;
+  line-height: 30px;
   margin: auto;
   display: flex;
   justify-content: center;
   align-items: center;
 }
-
+.yearClickPre > div{
+  width: 12px;
+  height: 12px;
+  border-top: 2px solid #303133;
+  border-left: 2px solid #303133;
+  transform: rotate(-45deg);
+}
 .wh_jiantou1 {
   width: 12px;
   height: 12px;
-  border-top: 2px solid #ffffff;
-  border-left: 2px solid #ffffff;
+  border-top: 2px solid #303133;
+  border-left: 2px solid #303133;
   transform: rotate(-45deg);
 }
 
-.wh_jiantou1:active,
-.wh_jiantou2:active {
+.wh_jiantou1:hover,
+.wh_jiantou2:hover {
   border-color: #ddd;
 }
-
+.yearClickPre:hover > div,
+.yearClickNext:hover > div {
+  border-color: #ddd;
+}
+.yearClickNext > div{
+  width: 12px;
+  height: 12px;
+  border-top: 2px solid #303133;
+  border-right: 2px solid #303133;
+  transform: rotate(45deg);
+}
 .wh_jiantou2 {
   width: 12px;
   height: 12px;
-  border-top: 2px solid #ffffff;
-  border-right: 2px solid #ffffff;
+  border-top: 2px solid #303133;
+  border-right: 2px solid #303133;
   transform: rotate(45deg);
 }
 .wh_content_item > .wh_isMark {
   margin: auto;
   border-radius: 100px;
-  background: blue;
+  background: #5ABD5C;
+  color: #fff;
   z-index: 2;
 }
 .wh_content_item .wh_other_dayhide {
@@ -124,18 +143,31 @@ wh_content_item_tag {
   color: #bfbfbf;
 }
 .wh_content_item .wh_isToday {
-  background: yellow;
-  border-radius: 100px;
+  /* background: yellow; */
+  /* border-radius: 100px; */
+  color: #409eff
 }
-.wh_content_item .wh_chose_day {
-  background: green;
+.wh_content_item .wh_chose_day::after {
+  /* background: #409eff;
   border-radius: 100px;
+  color: #fff; */
+  font-size: 18px;
+  content:"✔";
+  position: absolute;
+  color:#409eff;
+  top:10px;
+  left:38%;
+  transform: rotate(18deg)
 }
 </style>
 <template>
   <section class="wh_container">
     <div class="wh_content_all">
       <div class="wh_top_changge">
+        <li @click="PreYear(myDate,false)" class="yearClickPre">
+          <div></div>
+          <div></div>
+        </li>
         <li @click="PreMonth(myDate,false)">
           <div class="wh_jiantou1"></div>
         </li>
@@ -143,16 +175,20 @@ wh_content_item_tag {
         <li @click="NextMonth(myDate,false)">
           <div class="wh_jiantou2"></div>
         </li>
+         <li @click="NextYear(myDate,false)" class="yearClickNext">
+          <div></div>
+          <div></div>
+        </li>
       </div>
       <div class="wh_content">
-        <div class="wh_content_item" v-for="tag in textTop">
+        <div class="wh_content_item" v-for="(tag,index) in textTop" :key="index">
           <div class="wh_top_tag">
             {{tag}}
           </div>
         </div>
       </div>
       <div class="wh_content">
-        <div class="wh_content_item" v-for="(item,index) in list" @click="clickDay(item,index)">
+        <div class="wh_content_item" v-for="(item,index) in list" :key="index" @click="clickDay(item,index)">
           <div class="wh_item_date" v-bind:class="[{ wh_isMark: item.isMark},{wh_other_dayhide:item.otherMonth!=='nowMonth'},{wh_want_dayhide:item.dayHide},{wh_isToday:item.isToday},{wh_chose_day:item.chooseDay},setClass(item)]">
             {{item.id}}
           </div>
@@ -220,6 +256,26 @@ export default {
     ChoseMonth: function (date, isChosedDay = true) {
       date = timeUtil.dateFormat(date);
       this.myDate = new Date(date);
+      this.$emit('changeMonth', timeUtil.dateFormat(this.myDate));
+      if (isChosedDay) {
+        this.getList(this.myDate, date, isChosedDay);
+      } else {
+        this.getList(this.myDate);
+      }
+    },
+    PreYear: function (date, isChosedDay = true) {
+      date = timeUtil.dateFormat(date);
+      this.myDate = timeUtil.getOtherYear(this.myDate, 'preYear');
+      this.$emit('changeMonth', timeUtil.dateFormat(this.myDate));
+      if (isChosedDay) {
+        this.getList(this.myDate, date, isChosedDay);
+      } else {
+        this.getList(this.myDate);
+      }
+    },
+    NextYear: function (date, isChosedDay = true) {
+      date = timeUtil.dateFormat(date);
+      this.myDate = timeUtil.getOtherYear(this.myDate, 'nextYear');
       this.$emit('changeMonth', timeUtil.dateFormat(this.myDate));
       if (isChosedDay) {
         this.getList(this.myDate, date, isChosedDay);

@@ -52,6 +52,38 @@ export default {
     const t2 = year2 + '/' + month2 + '/' + day2
     return new Date(t2)
   },
+/**
+   * 获取当前日期上年或者下年
+  */
+ getOtherYear: function (date, str = 'nextYear') {
+  const timeArray = this.dateFormat(date).split('/')
+  const year = timeArray[0]
+  const month = timeArray[1]
+  const day = timeArray[2]
+  let year2 = year
+  let month2 = month
+  if (str === 'nextYear') {
+    year2 = parseInt(year2) + 1
+    
+  } else {
+    year2 = parseInt(year2) - 1
+  }
+  let day2 = day
+  const days2 = new Date(year2, month2, 0).getDate()
+  if (day2 > days2) {
+    day2 = days2
+  }
+  if (month2 < 10) {
+    month2 = '0' + month2
+  }
+  if (day2 < 10) {
+    day2 = '0' + day2
+  }
+  const t2 = year2 + '/' + month2 + '/' + day2
+  return new Date(t2)
+},
+
+
   //上个月末尾的一些日期
   getLeftArr: function (date) {
     let arr = []
@@ -90,6 +122,7 @@ export default {
   //format日期
   dateFormat: function (date) {
     date = typeof date === 'string' ? new Date(date.replace(/\-/g, '/')) : date;
+    // console.log('date',date)
     return date.getFullYear() + '/' + (date.getMonth() + 1) + '/'
       + date.getDate();
   },

@@ -140,7 +140,10 @@ wh_content_item_tag {
   color: #bfbfbf;
 }
 .wh_content_item .wh_want_dayhide {
+  cursor: not-allowed; 
   color: #bfbfbf;
+  background-color: #f5f7fa;
+  border-radius: 50%;
 }
 .wh_content_item .wh_isToday {
   /* background: yellow; */
@@ -199,6 +202,7 @@ wh_content_item_tag {
 </template>
 <script>
 import timeUtil from './calendar';
+let tsToday=Math.round(new Date().getTime()/1000).toString()
 export default {
   data() {
     return {
@@ -223,7 +227,7 @@ export default {
       default: () => false
     },
     agoDayHide: { type: String, default: `0` },
-    futureDayHide: { type: String, default: `2554387200` }
+    futureDayHide: { type: String, default:tsToday } //`2554387200` 
   },
   created() {
     this.intStart();
@@ -248,6 +252,10 @@ export default {
         this.getList(this.myDate, item.date);
       }
       if (item.otherMonth !== 'nowMonth') {
+        //console.log(item)
+        if(item.dayHide){
+          return
+        }
         item.otherMonth === 'preMonth'
           ? this.PreMonth(item.date)
           : this.NextMonth(item.date);
